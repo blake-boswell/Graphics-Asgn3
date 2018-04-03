@@ -16,7 +16,7 @@ class PhongShading {
     PhongShading();
     ~PhongShading();
     void setCamera(int* cameraPosition);
-    void setLight(int* light, float* lightSourcePosition);
-    void setObject(int* objectColor, float* lightSourcePosition);
+    void setLight(int* lightSourceColor, float* lightSourcePosition);
+    void setObject(int* objectColor, float* materialProperties);
     int* getShade(int* pixelLocation, int* surfaceNormal);
 }
