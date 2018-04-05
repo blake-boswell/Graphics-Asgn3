@@ -1,59 +1,77 @@
 #include "PhongShading.h"
 
+float* PhongShading::cameraPosition = new float[3];
+int* PhongShading::lightSourceColor = new int[3];
+float* PhongShading::lightSourcePosition = new float[3];
+int* PhongShading::objectColor = new int[3];
+float* PhongShading::materialProperties = new float[4];
+
 PhongShading::PhongShading() {
-    this->cameraPosition = new float[3]{0.0, 0.0, 0.0};
-    this->lightSourceColor = new int[3]{0, 0, 0};
-    this->lightSourcePosition = new float[3]{0.0, 0.0, 0.0};
-    this->objectColor = new int[3]{0, 0, 0};
-    this->materialProperties = new float[4]{0.0, 0.0, 0.0, 0.0};
+    
 }
 
 PhongShading::~PhongShading() {
-    delete[] this->cameraPosition;
-    delete[] this->lightSourceColor;
-    delete[] this->lightSourcePosition;
-    delete[] this->objectColor;
-    delete[] this->materialProperties;
+    delete[] PhongShading::cameraPosition;
+    delete[] PhongShading::lightSourceColor;
+    delete[] PhongShading::lightSourcePosition;
+    delete[] PhongShading::objectColor;
+    delete[] PhongShading::materialProperties;
 }
 
-void PhongShading::setCamera(int* cameraPosition) {
+void PhongShading::setCamera(float* cameraPosition) {
     for(int i = 0; i < 3; i++) {
-        this->cameraPosition[i] = cameraPosition[i];
+        PhongShading::cameraPosition[i] = cameraPosition[i];
     }
 }
 
 void PhongShading::setLight(int* lightSourceColor, float* lightSourcePosition) {
     for(int i = 0; i < 3; i++) {
-        this->lightSourceColor[i] = lightSourceColor[i];
-        this->lightSourcePosition[i] = lightSourcePosition[i];
+        PhongShading::lightSourceColor[i] = lightSourceColor[i];
+        PhongShading::lightSourcePosition[i] = lightSourcePosition[i];
     }
 }
 
 void PhongShading::setObject(int* objectColor, float* materialProperties) {
     for(int i = 0; i < 3; i++) {
-        this->objectColor[i] = objectColor[i];
-        this->materialProperties[i] = materialProperties[i];
+        PhongShading::objectColor[i] = objectColor[i];
+        PhongShading::materialProperties[i] = materialProperties[i];
     }
-    this->materialProperties[3] = materialProperties[3];
+    PhongShading::materialProperties[3] = materialProperties[3];
 }
 
 float* PhongShading::getShade(float* pixelLocation, float* surfaceNormal) {
-    int* shade = new int[3];
+    float* shade = new float[3];
 
     // Calculate ambient color values
     // ambient absorption coefficient (Ka) * Color (R,G,B) = Ia vector
-    float R = this->materialProperties[0] * this->objectColor[0];
-    float G = this->materialProperties[0] * this->objectColor[1];
-    float B = this->materialProperties[0] * this->objectColor[2];
+    // float R = PhongShading::materialProperties[0] * PhongShading::objectColor[0];
+    // float G = PhongShading::materialProperties[0] * PhongShading::objectColor[1];
+    // float B = PhongShading::materialProperties[0] * PhongShading::objectColor[2];
 
     // Generate LdotN vector
-    float* lightVector = new float[3];
-    float* normalVector = new float[3];
+    float* normalizedLightVector = new float[3];
+    float* normalizedNormalVector = new float[3];
 
-    lightVector = normalize(this->lightSourcePosition);
-    normalVector = normalize(surfaceNormal);
+    normalizedLightVector = normalize(PhongShading::lightSourcePosition);
+    normalizedNormalVector = normalize(surfaceNormal);
 
-    float LdotN = dot(lightVector, normalVector);
+    float LdotN = dot(normalizedLightVector, normalizedNormalVector);
+
+    for(int i = 0; i < 3; i++) {
+        if(i == 0) cout << "X" << endl;
+        else if (i == 1) cout << "Y" << endl;
+        else cout << "Z" << endl;
+        cout << "\tLight Vector: " << PhongShading::lightSourcePosition[i] << endl;
+        cout << "\tLight Vector Magnitude: " << PhongShading::lightSourcePosition[i]/normalizedLightVector[i] << endl;
+        cout << "\tNormalized Light Vector: " << normalizedLightVector[i] << endl;
+        cout << "\tNormal Vector: " << surfaceNormal[i] << endl;
+        cout << "\tNormal Vector Magnitude: " << surfaceNormal[i]/normalizedNormalVector[i] << endl;
+        cout << "\tNormalized Normal Vector: " << normalizedNormalVector[i] << endl;
+    }
+    cout << "L dot N: " << LdotN << endl;
+    cout << "Normalized Light Vector Magnitude: " << magnitude(normalizedLightVector) << endl;
+    cout << "Normalized Normal Vector Magnitude: " << magnitude(normalizedNormalVector) << endl;
+
     if(LdotN < 0.0) {
         LdotN = 0.0;
     }
@@ -63,10 +81,10 @@ float* PhongShading::getShade(float* pixelLocation, float* surfaceNormal) {
     float* viewVector = new float[3];
 
     for(int i = 0; i < 3; i++) {
-        reflectionVector[i] = 2 * LdotN * pixelLocation[i] - this->lightSourcePosition[i];
+        reflectionVector[i] = 2 * LdotN * pixelLocation[i] - PhongShading::lightSourcePosition[i];
     }
     reflectionVector = normalize(reflectionVector);
-    viewVector = normalize(this->cameraPosition);
+    viewVector = normalize(PhongShading::cameraPosition);
 
     
     float RdotV = dot(reflectionVector, viewVector);
@@ -74,10 +92,11 @@ float* PhongShading::getShade(float* pixelLocation, float* surfaceNormal) {
         RdotV = 0.0;
     }
 
+    return shade;
 
 }
 
-float PhongShading::dot(float a[], float b[], int vectorSize = 3) {
+float PhongShading::dot(float a[], float b[], int vectorSize) {
     float dotResult = 0.0;
     for(int i = 0; i < vectorSize; i++) {
         dotResult += a[i] * b[i];
@@ -85,7 +104,7 @@ float PhongShading::dot(float a[], float b[], int vectorSize = 3) {
     return dotResult;
 }
 
-float PhongShading::dot(int a[], int b[], int vectorSize = 3) {
+float PhongShading::dot(int a[], int b[], int vectorSize) {
     float dotResult = 0.0;
     for(int i = 0; i < vectorSize; i++) {
         dotResult += a[i] * b[i];
@@ -93,10 +112,38 @@ float PhongShading::dot(int a[], int b[], int vectorSize = 3) {
     return dotResult;
 }
 
-float* PhongShading::normalize(float* vector) {
+float* PhongShading::normalize(float* vector, int vectorSize) {
+    float* normalizedVector = new float[vectorSize];
+    float vectorMagnitude = magnitude(vector);
+    for(int i = 0; i < vectorSize; i++) {
+        normalizedVector[i] = vector[i] / vectorMagnitude;
+    }
+    return normalizedVector;
+
 
 }
 
-float* PhongShading::normalize(int* vector) {
+float* PhongShading::normalize(int* vector, int vectorSize) {
+    float* normalizedVector = new float[vectorSize];
+    float vectorMagnitude = magnitude(vector);
+    for(int i = 0; i < vectorSize; i++) {
+        normalizedVector[i] = (float)vector[i] / vectorMagnitude;
+    }
+    return normalizedVector;
+}
 
+float PhongShading::magnitude(float* vector, int vectorSize) {
+    float squareSum = 0;
+    for(int i = 0; i < vectorSize; i++) {
+        squareSum += vector[i] * vector[i];
+    }
+    return sqrt(squareSum);
+}
+
+float PhongShading::magnitude(int* vector, int vectorSize) {
+    float squareSum = 0;
+    for(int i = 0; i < vectorSize; i++) {
+        squareSum += vector[i] * vector[i];
+    }
+    return sqrt(squareSum);
 }

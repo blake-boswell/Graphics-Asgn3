@@ -3,6 +3,9 @@
 // Packages for debugging
 #include <iostream>
 #include <stdlib.h>
+#include <cmath>
+
+using namespace std;
 
 class PhongShading {
     private:
@@ -13,8 +16,10 @@ class PhongShading {
     static float* materialProperties;   // Ka, Kd, Ks, alpha
     float dot(float a[], float b[], int vectorSize = 3);
     float dot(int a[], int b[], int vectorSize = 3);
-    float* normalize(float* vector);
-    float* normalize(int* vector);
+    float* normalize(float* vector, int vectorSize = 3);
+    float* normalize(int* vector, int vectorSize = 3);
+    float magnitude(float* vector, int vectorSize = 3);
+    float magnitude(int* vector, int vectorSize = 3);
     // ambient absorption coefficient (Ka)
     // diffuse absorption coefficient (Kd)
     // specular absorption coefficient (Ks)
@@ -31,8 +36,8 @@ class PhongShading {
     public:
     PhongShading();
     ~PhongShading();
-    void setCamera(int* cameraPosition);
-    void setLight(int* lightSourceColor, float* lightSourcePosition);
-    void setObject(int* objectColor, float* materialProperties);
+    static void setCamera(float* cameraPosition);
+    static void setLight(int* lightSourceColor, float* lightSourcePosition);
+    static void setObject(int* objectColor, float* materialProperties);
     float* getShade(float* pixelLocation, float* surfaceNormal);
-}
+};
