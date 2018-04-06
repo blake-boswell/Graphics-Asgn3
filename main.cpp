@@ -47,13 +47,13 @@ stringCode hashString(string const& input) {
 }
 
 void readFile(string filename) {
-    float* cameraPosition = new float[3]{0.0, 0.0, -300.0};
-    int* lightSourceColor = new int[3]{100, 100, 100};
-    float* lightSourcePosition = new float[3]{.5, .5, -.7};
-    int* objectColor = new int[3]{255, 255, 0};
-    float* materialProperties = new float[4]{0.2, 0.4, 0.4, 2.0};
-    float* pixelLocation = new float[3]{100.0, 100.0, 200.0};
-    float* surfaceNormal = new float[3]{0.398925, 0.598388, -0.453324};
+    float* cameraPosition = new float[3];
+    int* lightSourceColor = new int[3];
+    float* lightSourcePosition = new float[3];
+    int* objectColor = new int[3];
+    float* materialProperties = new float[4];
+    float* pixelLocation = new float[3];
+    float* surfaceNormal = new float[3];
     Scene* p = new Scene();
     vector<string> words;
     fstream fs;
