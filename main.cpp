@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "PhongShading.h"
+#include "Scene.h"
 
 using namespace std;
 
@@ -54,7 +54,7 @@ void readFile(string filename) {
     float* materialProperties = new float[4]{0.2, 0.4, 0.4, 2.0};
     float* pixelLocation = new float[3]{100.0, 100.0, 200.0};
     float* surfaceNormal = new float[3]{0.398925, 0.598388, -0.453324};
-    PhongShading* p = new PhongShading();
+    Scene* p = new Scene();
     vector<string> words;
     fstream fs;
     string line;
@@ -76,14 +76,14 @@ void readFile(string filename) {
                         for(int i = 0; i < 3; i++) {
                             cameraPosition[i] = atof(words[i+1].c_str());
                         }
-                        PhongShading::setCamera(cameraPosition);
+                        Scene::setCamera(cameraPosition);
                         break;
                     case Light:
                         for(int i = 0; i < 3; i++) {
                             lightSourceColor[i] = atoi(words[i+1].c_str());
                             lightSourcePosition[i] = atof(words[i+4].c_str());
                         }
-                        PhongShading::setLight(lightSourceColor, lightSourcePosition);
+                        Scene::setLight(lightSourceColor, lightSourcePosition);
                         break;
                     case Object:
                         for(int i = 0; i < 4; i++) {
@@ -92,7 +92,7 @@ void readFile(string filename) {
                             }
                             materialProperties[i] = atof(words[i+4].c_str());
                         }
-                        PhongShading::setObject(objectColor, materialProperties);
+                        Scene::setObject(objectColor, materialProperties);
                         break;
                     case Point: 
                         for(int i = 0; i < 3; i++) {

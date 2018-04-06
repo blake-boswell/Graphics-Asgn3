@@ -1,4 +1,4 @@
-// Header file for PhongShading class
+// Header file for Scene class
 
 // Packages for debugging
 #include <iostream>
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-class PhongShading {
+class Scene {
     private:
     static float* cameraPosition;
     static int* lightSourceColor;
@@ -34,8 +34,8 @@ class PhongShading {
     // Ip = Ka * Ia + Kd * (^L dot ^N) * Id + Ks * (^R dot ^V)^alpha * Is
 
     public:
-    PhongShading();
-    ~PhongShading();
+    Scene();
+    ~Scene();
     static void setCamera(float* cameraPosition);
     static void setLight(int* lightSourceColor, float* lightSourcePosition);
     static void setObject(int* objectColor, float* materialProperties);
