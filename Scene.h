@@ -1,3 +1,4 @@
+// Author: Blake Boswell
 // Header file for Scene class
 
 // Packages for debugging

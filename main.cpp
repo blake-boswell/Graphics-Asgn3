@@ -1,5 +1,5 @@
 // Author: Blake Boswell
-// Synopsis: This file is used to test out the Phong Shading class
+// Synopsis: This file is used to test out Phong Shading
 
 #include <iostream>
 #include <stdlib.h>
@@ -67,9 +67,6 @@ void readFile(string filename) {
             getline(fs, line);
             if(line.length() > 0) {
                 words = split(line, delimiter);
-                // for(int i = 0; i < words.size(); i++) {
-                //     cout << "[" << i << "] " << words[i] << endl;
-                // }
                 type = hashString(words[0].c_str());
                 switch(type) {
                     case Camera:
